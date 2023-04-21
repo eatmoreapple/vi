@@ -13,6 +13,9 @@ type Vector[T any] struct{ vs *[]T }
 
 // Push adds an element to the end of the vector.
 func (v *Vector[T]) Push(t T) {
+	if v.vs == nil {
+		v.vs = &[]T{}
+	}
 	*v.vs = append(*v.vs, t)
 }
 

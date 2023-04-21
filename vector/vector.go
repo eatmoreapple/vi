@@ -87,6 +87,20 @@ func (v *Vector[T]) Delete(i int) bool {
 	return true
 }
 
+// Remove removes the first element equal to the given value.
+func (v *Vector[T]) Remove(t T) bool {
+	var a any = t
+	var b any
+	for i, item := range *v.vs {
+		b = item
+		if a == b {
+			v.Delete(i)
+			return true
+		}
+	}
+	return false
+}
+
 // Swap swaps the elements at the given indices.
 func (v *Vector[T]) Swap(i, j int) bool {
 	if i < 0 || i >= v.Len() || j < 0 || j >= v.Len() {

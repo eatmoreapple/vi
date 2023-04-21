@@ -243,6 +243,18 @@ func (v ComparableVector[T]) Contains(t T) bool {
 	return false
 }
 
-func (v ComparableVector[T]) Prototype() []T {
-	return *v.vs
+func (v ComparableVector[T]) Eq(cp ComparableVector[T]) bool {
+	if v.Len() != cp.Len() {
+		return false
+	}
+	for i, item := range *v.vs {
+		if item != (*cp.vs)[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func (v ComparableVector[T]) Ne(cp ComparableVector[T]) bool {
+	return !v.Eq(cp)
 }

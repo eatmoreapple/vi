@@ -1,11 +1,11 @@
-package vi
+package vector
 
 import (
 	"encoding/json"
 	"fmt"
 )
 
-func NewVector[T any](ts *[]T) *Vector[T] {
+func New[T any](ts *[]T) *Vector[T] {
 	return &Vector[T]{vs: ts}
 }
 
@@ -102,7 +102,7 @@ func (v Vector[T]) Slice(i, j int) *Vector[T] {
 		return nil
 	}
 	item := (*v.vs)[i:j]
-	return NewVector(&item)
+	return New(&item)
 }
 
 // Reverse reverses the elements of the vector.
@@ -229,7 +229,9 @@ func (v Vector[T]) String() string {
 	return fmt.Sprintf("%v", *v.vs)
 }
 
-type ComparableVector[T comparable] Vector[T]
+type ComparableVector[T comparable] struct {
+	Vector[T]
+}
 
 // Contains returns true if the vector contains the given element.
 func (v ComparableVector[T]) Contains(t T) bool {
@@ -243,17 +245,4 @@ func (v ComparableVector[T]) Contains(t T) bool {
 
 func (v ComparableVector[T]) Prototype() []T {
 	return *v.vs
-}
-
-func (v *ComparableVector[T]) UnmarshalJSON(bytes []byte) error {
-	var item []T
-	if err := json.Unmarshal(bytes, &item); err != nil {
-		return err
-	}
-	v.vs = &item
-	return nil
-}
-
-func (v ComparableVector[T]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.vs)
 }

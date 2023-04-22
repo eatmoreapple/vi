@@ -229,6 +229,10 @@ func (v Vector[T]) Prototype() []T {
 	return *v.vs
 }
 
+func (v Vector[T]) Collect() []T {
+	return *v.vs
+}
+
 func (v *Vector[T]) UnmarshalJSON(bytes []byte) error {
 	var item []T
 	if err := json.Unmarshal(bytes, &item); err != nil {

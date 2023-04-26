@@ -8,7 +8,7 @@ import (
 
 func TestVector_Push(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	vec.Push(4)
 	if vec.Len() != 4 {
 		t.Errorf("expected %d, got %d", 4, vec.Len())
@@ -20,7 +20,7 @@ func TestVector_Push(t *testing.T) {
 
 func TestVector_Pop(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	t1, ok := vec.Pop()
 	if !ok {
 		t.Errorf("expected %t, got %t", true, ok)
@@ -35,7 +35,7 @@ func TestVector_Pop(t *testing.T) {
 
 func TestVector_Delete(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	vec.Delete(1)
 	if vec.Len() != 2 {
 		t.Errorf("expected %d, got %d", 2, vec.Len())
@@ -47,7 +47,7 @@ func TestVector_Delete(t *testing.T) {
 
 func TestVector_IsEmpty(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	if vec.IsEmpty() {
 		t.Errorf("expected %t, got %t", false, vec.IsEmpty())
 	}
@@ -59,7 +59,7 @@ func TestVector_IsEmpty(t *testing.T) {
 
 func TestVector_Len(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	if vec.Len() != 3 {
 		t.Errorf("expected %d, got %d", 3, vec.Len())
 	}
@@ -67,7 +67,7 @@ func TestVector_Len(t *testing.T) {
 
 func TestVector_Remove(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	vec.Remove(2)
 	if vec.Len() != 2 {
 		t.Errorf("expected %d, got %d", 2, vec.Len())
@@ -79,7 +79,7 @@ func TestVector_Remove(t *testing.T) {
 
 func TestVector_Foreach(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	var index int
 	vec.Foreach(func(i int) {
 		if v[index] != i {
@@ -91,7 +91,7 @@ func TestVector_Foreach(t *testing.T) {
 
 func TestVector_Reduce(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	result := vec.Reduce(func(i int, i2 int) int {
 		return i + i2
 	})
@@ -102,7 +102,7 @@ func TestVector_Reduce(t *testing.T) {
 
 func TestVector_Map(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	result := vec.Map(func(i int) int {
 		return i + 1
 	})
@@ -113,7 +113,7 @@ func TestVector_Map(t *testing.T) {
 
 func TestVector_Filter(t *testing.T) {
 	v := []int{1, 2, 3}
-	vec := vector.New(&v)
+	vec := vector.From(&v)
 	result := vec.Filter(func(i int) bool {
 		return i > 1
 	})
@@ -123,7 +123,7 @@ func TestVector_Filter(t *testing.T) {
 }
 
 func TestNew(t *testing.T) {
-	vec := vector.New[int](nil)
+	vec := vector.New[int]()
 	vec.Push(1)
 	if vec.Len() != 1 {
 		t.Errorf("expected %d, got %d", 1, vec.Len())

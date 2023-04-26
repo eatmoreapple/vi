@@ -5,7 +5,11 @@ import (
 	"fmt"
 )
 
-func New[T any](ts *[]T) *Vector[T] {
+func New[T any]() *Vector[T] {
+	return From[T](nil)
+}
+
+func From[T any](ts *[]T) *Vector[T] {
 	return &Vector[T]{vs: ts}
 }
 
@@ -119,7 +123,7 @@ func (v *Vector[T]) Slice(i, j int) *Vector[T] {
 		return nil
 	}
 	item := (*v.vs)[i:j]
-	return New(&item)
+	return From(&item)
 }
 
 // Reverse reverses the elements of the vector.

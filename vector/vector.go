@@ -32,12 +32,12 @@ func (v *Vector[T]) Pop() (T, bool) {
 }
 
 // IsEmpty returns true if the vector is empty.
-func (v Vector[T]) IsEmpty() bool {
+func (v *Vector[T]) IsEmpty() bool {
 	return v.Len() == 0
 }
 
 // Len returns the number of elements in the vector.
-func (v Vector[T]) Len() int {
+func (v *Vector[T]) Len() int {
 	return len(*v.vs)
 }
 
@@ -49,7 +49,7 @@ func (v *Vector[T]) Clear() {
 // At returns the element at the given index.
 // If the index is out of range, At returns false.
 // Equivalent to v[i], but returns false if i is out of range.
-func (v Vector[T]) At(i int) (T, bool) {
+func (v *Vector[T]) At(i int) (T, bool) {
 	var t T
 	if i < 0 || i >= v.Len() {
 		return t, false
@@ -114,7 +114,7 @@ func (v *Vector[T]) Swap(i, j int) bool {
 }
 
 // Slice returns a slice of the vector from i to j.
-func (v Vector[T]) Slice(i, j int) *Vector[T] {
+func (v *Vector[T]) Slice(i, j int) *Vector[T] {
 	if i < 0 || i >= v.Len() || j < 0 || j >= v.Len() {
 		return nil
 	}
@@ -144,7 +144,7 @@ func (v *Vector[T]) ForeachIndex(f func(int, T)) {
 }
 
 // Filter returns a new vector containing all elements for which the given function returns true.
-func (v Vector[T]) Filter(f func(T) bool) *Vector[T] {
+func (v *Vector[T]) Filter(f func(T) bool) *Vector[T] {
 	var item Vector[T]
 	for _, t := range *v.vs {
 		if f(t) {
@@ -155,7 +155,7 @@ func (v Vector[T]) Filter(f func(T) bool) *Vector[T] {
 }
 
 // Map returns a new vector containing the results of applying the given function to each element of the vector.
-func (v Vector[T]) Map(f func(T) T) *Vector[T] {
+func (v *Vector[T]) Map(f func(T) T) *Vector[T] {
 	var item Vector[T]
 	for _, t := range *v.vs {
 		item.Push(f(t))
@@ -182,7 +182,7 @@ func (v *Vector[T]) ReduceIndex(f func(int, T, T) T) T {
 }
 
 // Find returns the first element for which the given function returns true.
-func (v Vector[T]) Find(f func(T) bool) (T, bool) {
+func (v *Vector[T]) Find(f func(T) bool) (T, bool) {
 	var t T
 	for _, item := range *v.vs {
 		if f(item) {
@@ -194,7 +194,7 @@ func (v Vector[T]) Find(f func(T) bool) (T, bool) {
 }
 
 // FindIndex returns the index of the first element for which the given function returns true.
-func (v Vector[T]) FindIndex(f func(T) bool) (int, bool) {
+func (v *Vector[T]) FindIndex(f func(T) bool) (int, bool) {
 	for i, item := range *v.vs {
 		if f(item) {
 			return i, true
@@ -204,7 +204,7 @@ func (v Vector[T]) FindIndex(f func(T) bool) (int, bool) {
 }
 
 // FindLast returns the last element for which the given function returns true.
-func (v Vector[T]) FindLast(f func(T) bool) (T, bool) {
+func (v *Vector[T]) FindLast(f func(T) bool) (T, bool) {
 	var t T
 	for i := v.Len() - 1; i >= 0; i-- {
 		if f((*v.vs)[i]) {
@@ -225,14 +225,17 @@ func (v *Vector[T]) FindLastIndex(f func(T) bool) (int, bool) {
 	return 0, false
 }
 
-func (v Vector[T]) Prototype() []T {
+// Prototype returns the prototype of the vector.
+func (v *Vector[T]) Prototype() []T {
 	return *v.vs
 }
 
-func (v Vector[T]) Collect() []T {
+// Collect returns the elements of the vector.
+func (v *Vector[T]) Collect() []T {
 	return *v.vs
 }
 
+// UnmarshalJSON unmarshals the vector from JSON.
 func (v *Vector[T]) UnmarshalJSON(bytes []byte) error {
 	var item []T
 	if err := json.Unmarshal(bytes, &item); err != nil {
@@ -242,40 +245,11 @@ func (v *Vector[T]) UnmarshalJSON(bytes []byte) error {
 	return nil
 }
 
-func (v Vector[T]) MarshalJSON() ([]byte, error) {
+// MarshalJSON marshals the vector to JSON.
+func (v *Vector[T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.vs)
 }
 
-func (v Vector[T]) String() string {
+func (v *Vector[T]) String() string {
 	return fmt.Sprintf("%v", *v.vs)
-}
-
-type ComparableVector[T comparable] struct {
-	Vector[T]
-}
-
-// Contains returns true if the vector contains the given element.
-func (v ComparableVector[T]) Contains(t T) bool {
-	for _, item := range *v.vs {
-		if item == t {
-			return true
-		}
-	}
-	return false
-}
-
-func (v ComparableVector[T]) Eq(cp ComparableVector[T]) bool {
-	if v.Len() != cp.Len() {
-		return false
-	}
-	for i, item := range *v.vs {
-		if item != (*cp.vs)[i] {
-			return false
-		}
-	}
-	return true
-}
-
-func (v ComparableVector[T]) Ne(cp ComparableVector[T]) bool {
-	return !v.Eq(cp)
 }
